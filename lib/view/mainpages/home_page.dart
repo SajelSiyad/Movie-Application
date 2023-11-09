@@ -13,7 +13,7 @@ class HomePage extends ConsumerWidget {
   HomePage({super.key});
 
   final carouselController = CarouselController();
-  int toggleindex = 0;
+  // int toggleindex = 0;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -324,17 +324,20 @@ class HomePage extends ConsumerWidget {
                       labels: const ['Day', 'Week'],
                       customTextStyles: [
                         TextStyle(
-                            color:
-                                toggleindex == 0 ? Colors.black : Colors.white,
+                            color: ref.watch(toggleProvider) == 0
+                                ? Colors.black
+                                : Colors.white,
                             fontWeight: FontWeight.w500),
                         TextStyle(
-                          color: toggleindex == 1 ? Colors.black : Colors.white,
+                          color: ref.watch(toggleProvider) == 1
+                              ? Colors.black
+                              : Colors.white,
                         ),
                       ],
                       radiusStyle: true,
                       onToggle: (value) {
                         ref.read(toggleProvider.notifier).state = value!;
-                        toggleindex = ref.read(toggleProvider.notifier).state;
+                        // toggleindex = ref.read(toggleProvider.notifier).state;
                       },
                     ),
                   ],
@@ -343,7 +346,7 @@ class HomePage extends ConsumerWidget {
                   height: R.width(10, context),
                 ),
                 ref
-                    .watch(toggleindex == 0
+                    .watch(ref.watch(toggleProvider) == 0
                         ? getTrendingMoviesProviderWeek
                         : getTrendingMoviesProviderDay)
                     .when(

@@ -1,13 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movieapp/models/auth_model.dart';
+import 'package:movieapp/providers/auth_provider.dart';
 import 'package:movieapp/providers/provider.dart';
+import 'package:movieapp/services/auth_service.dart';
 import 'package:movieapp/utils/responsive.dart';
 import 'package:movieapp/view/opening_pages/sign_up_page.dart';
 import 'package:movieapp/view/pageview/pageview.dart';
 
 class LoginPage extends ConsumerWidget {
-  const LoginPage({super.key});
-
+  LoginPage({super.key});
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -60,8 +65,9 @@ class LoginPage extends ConsumerWidget {
                     SizedBox(
                       height: R.width(30, context),
                     ),
-                    const TextField(
+                    TextField(
                       cursorColor: Colors.white,
+                      controller: emailController,
                       style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         fillColor: Colors.white38,
@@ -79,6 +85,7 @@ class LoginPage extends ConsumerWidget {
                       height: R.width(10, context),
                     ),
                     TextField(
+                      controller: passwordController,
                       cursorColor: Colors.white,
                       obscureText: ref.watch(visibleProvider),
                       style: const TextStyle(color: Colors.white),
@@ -111,13 +118,35 @@ class LoginPage extends ConsumerWidget {
                       height: R.width(20, context),
                     ),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PgView(),
-                          ),
-                        );
+                      onTap: () async {
+                        if (emailController.text.isEmpty ||
+                            passwordController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Fill all the field"),
+                            ),
+                          );
+                        } else {
+                          // print(emailController.text);
+                          // print(passwordController.text);
+                          try {
+                            // await ref.watch(
+                            //   signInProvider(
+                            //     AuthModel(
+                            //         email: emailController.text,
+                            //         password: passwordController.text),
+                            //   ),
+                            // );
+                            await AuthService().signIn(
+                                emailController.text, passwordController.text);
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("$e"),
+                              ),
+                            );
+                          }
+                        }
                       },
                       child: Container(
                         width: MediaQuery.sizeOf(context).width,
@@ -162,7 +191,7 @@ class LoginPage extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SignUP(),
+                            builder: (context) => SignUP(),
                           ),
                         );
                       },

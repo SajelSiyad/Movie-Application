@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/view/opening_pages/auth_checker.dart';
 
 import '../opening_pages/sign_in_page.dart';
 
@@ -17,12 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       const Duration(milliseconds: 3500),
       () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginPage(),
-          ),
-        );
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AuthChecker(),
+            ),
+          );
+        }
       },
     );
   }

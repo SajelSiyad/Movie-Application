@@ -1,12 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movieapp/models/auth_model.dart';
+import 'package:movieapp/providers/auth_provider.dart';
+import 'package:movieapp/services/auth_service.dart';
 import 'package:movieapp/utils/responsive.dart';
-import 'package:movieapp/view/pageview/pageview.dart';
 
-class SignUP extends StatelessWidget {
-  const SignUP({super.key});
+class SignUP extends ConsumerWidget {
+  SignUP({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -47,12 +55,11 @@ class SignUP extends StatelessWidget {
               height: R.width(20, context),
             ),
             Padding(
-              padding: EdgeInsets.all(
-                R.width(20, context),
-              ),
+              padding: EdgeInsets.all(R.width(20, context)),
               child: Column(
                 children: [
-                  const TextField(
+                  TextField(
+                    controller: emailController,
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
@@ -70,7 +77,8 @@ class SignUP extends StatelessWidget {
                   SizedBox(
                     height: R.width(13, context),
                   ),
-                  const TextField(
+                  TextField(
+                    controller: passwordController,
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
@@ -88,7 +96,8 @@ class SignUP extends StatelessWidget {
                   SizedBox(
                     height: R.width(13, context),
                   ),
-                  const TextField(
+                  TextField(
+                    controller: confirmPasswordController,
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
@@ -110,13 +119,45 @@ class SignUP extends StatelessWidget {
                     height: R.width(45, context),
                     width: R.width(200, context),
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PgView(),
-                          ),
-                        );
+                      onPressed: () async {
+                        if (emailController.text.isEmpty ||
+                            passwordController.text.isEmpty ||
+                            confirmPasswordController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Fill all the field"),
+                            ),
+                          );
+                        } else if (passwordController.text !=
+                            confirmPasswordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Password doesn't match"),
+                            ),
+                          );
+                        } else {
+                          try {
+                            // await ref.watch(
+                            //   signUpProvider(
+                            //     AuthModel(
+                            //         email: emailController.text,
+                            //         password: passwordController.text),
+                            //   ),
+                            // );
+                            await AuthService()
+                                .signUp(emailController.text,
+                                    passwordController.text)
+                                .then((value) => Navigator.pop(context));
+
+                            // ref.invalidate(signUpProvider);
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("$e"),
+                              ),
+                            );
+                          }
+                        }
                       },
                       child: const Text("Create Account"),
                     ),

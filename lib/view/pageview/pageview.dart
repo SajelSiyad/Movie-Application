@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movieapp/providers/provider.dart';
+import 'package:movieapp/services/auth_service.dart';
 import 'package:movieapp/utils/responsive.dart';
 import 'package:movieapp/view/mainpages/downloads.dart';
 import 'package:movieapp/view/mainpages/home_page.dart';
@@ -214,32 +215,24 @@ class PgView extends ConsumerWidget {
                 ),
               ),
             ),
-            Row(
-              children: [
-                Switch(
-                  value: ref.watch(switchProvider),
-                  onChanged: (value) {
-                    ref.read(switchProvider.notifier).state =
-                        !ref.read(switchProvider.notifier).state;
-                  },
-                  inactiveTrackColor: Colors.white38,
-                  inactiveThumbColor: const Color(0xffffce67),
-                  activeColor: Colors.black,
-                  activeTrackColor: Colors.black45,
+            ListTile(
+              onTap: () {
+                AuthService().logOut();
+              },
+              leading: Icon(
+                Icons.logout,
+                color: ref.watch(switchProvider) ? Colors.black : Colors.white,
+                size: R.width(30, context),
+              ),
+              title: Text(
+                "Log Out",
+                style: TextStyle(
+                  fontSize: R.width(17, context),
+                  color:
+                      ref.watch(switchProvider) ? Colors.black : Colors.white,
                 ),
-                SizedBox(
-                  width: R.width(12, context),
-                ),
-                Text("Light Mode",
-                    style: TextStyle(
-                      fontSize: R.width(17, context),
-                      fontWeight: FontWeight.w500,
-                      color: ref.watch(switchProvider)
-                          ? Colors.black
-                          : Colors.white,
-                    ))
-              ],
-            )
+              ),
+            ),
           ],
         ),
       ),
