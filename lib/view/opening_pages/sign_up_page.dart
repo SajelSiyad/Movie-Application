@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movieapp/models/auth_model.dart';
-import 'package:movieapp/providers/auth_provider.dart';
 import 'package:movieapp/services/auth_service.dart';
 import 'package:movieapp/utils/responsive.dart';
 

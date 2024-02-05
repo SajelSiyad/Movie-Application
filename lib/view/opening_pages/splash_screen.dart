@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/view/opening_pages/auth_checker.dart';
 
-import '../opening_pages/sign_in_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
