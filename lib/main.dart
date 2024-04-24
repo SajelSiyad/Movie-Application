@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movieapp/firebase_options.dart';
-import 'package:movieapp/view/opening_pages/auth_checker.dart';
 import 'package:movieapp/view/opening_pages/splash_screen.dart';
 
 void main() async {
